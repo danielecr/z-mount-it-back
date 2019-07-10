@@ -1,0 +1,16 @@
+{
+	"name": "j-mount-it-back",
+	"version": "1.0.0",
+	"description": "Json responder mocker",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"test": "node tests/*.spec.js"
+	},
+	"author": "Daniele Cruciani <daniele@smartango.com>",
+	"license": "GPL",
+	"dependencies": {
+		"jsonpath-plus": "^0.20.1",
+		"zeromq-stable": "^5.2.1"
+	}
+}

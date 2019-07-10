@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+    zmountitback:
+        build:
+            context: ..
+            dockerfile: ./Dockerfile
+        command: top -b
+        volumes:
+            - ../code:/home/node/code
