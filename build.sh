@@ -20,10 +20,10 @@ case "$1" in
     ;;
     localrun)
     docker-compose -f services/docker-compose-dev.yml up -d
-    docker exec -u node -it services_{$NAME}_1 sh
+    docker exec -u node -it "services_"$NAME"_1" sh
     ;;
     localsh)
-    docker exec -u node -it services_{$NAME}_1 sh
+    docker exec -u node -it "services_"$NAME"_1" sh
     ;;
     localstop)
     set -x
