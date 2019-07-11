@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=0.3
+VERSION=0.3.4
 REGTAG=starsellersworld/zmountitback
 LOCTAG=zmountitback
 NAME=zmountitback
@@ -35,6 +35,9 @@ case "$1" in
     ;;
     tagname)
     echo $REGTAG:$VERSION
+    ;;
+    version)
+    echo $VERSION
     ;;
 ## other staff
     setnet)

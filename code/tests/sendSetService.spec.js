@@ -27,8 +27,15 @@ const unknown_request = {
     error: 'unknown request'
 }
 
+const remove_rep = {
+    cmd: '/service_rep_del',
+    data: {
+        port: 4441
+    }
+}
+
 const setup = {
-    cmd: "/add_rep_service",
+    cmd: "/service_rep_add",
     data: {
         port: 4441,
         requests: [
@@ -74,6 +81,14 @@ const setup = {
     }
 }
 
+const clear_calls = {
+    cmd: '/calls_clear',
+    data: {
+        port: 4441,
+        "JSONPath": "$.[?(@.cmd=='/getMatchingProductByEAN')]"
+    }
+}
+
 
 const sendToMock = () => {
     const msg = {
@@ -87,7 +102,7 @@ const sendToMock = () => {
         console.log('mockedservice replied', response);
         assert.deepEqual(response, msg_out)
         const askMsg = {
-            cmd: '/get_calls',
+            cmd: '/calls_list',
             data: {
                 port: 4441,
                 "JSONPath": "$.[?(@.cmd=='/getMatchingProductByEAN')]"

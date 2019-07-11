@@ -18,7 +18,7 @@ authentication mechanism required.
 Commands are:
 
 ```
-cmd: /add_rep_service
+cmd: /service_rep_add
 data: {
     "port": 1233,
     "requests": <see code/tests>

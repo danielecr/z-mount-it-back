@@ -5,12 +5,12 @@ const { mockResponder, mockInspector } = require('./mock-responder.js');
 const imposter = (engines) => (msg) => {
     try {
         switch(msg.cmd) {
-        case '/add_rep_service':
+        case '/service_rep_add':
 			return engines.create(msg.data).then(_=>{
 				setupResponder(mockResponder(msg.data.port), msg.data.port);
 				return 'ok';
 			});
-        case '/get_calls':
+        case '/calls_list':
             return mockInspector(msg)
         default:
             return Promise.resolve({error:'unknown request'})

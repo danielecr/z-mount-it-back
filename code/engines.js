@@ -58,7 +58,7 @@ const inspect = (msg) => {
 		return Promise.resolve({error: 'missing port prop in data, for inspect command: ' + msg.cmd})
 	}
 	switch (msg.cmd) {
-		case '/get_calls':
+		case '/calls_list':
 			const callList = returnCalls(msg.data);
 			return Promise.resolve({error:null, data: callList})
 	}
