@@ -112,6 +112,9 @@ const sendToMock = () => {
             console.log('calls', calls);
             assert.deepEqual(calls.data[0], msg);
             // calls.data[0] should be equals msg
+            imposter(clear_calls).then(reply=> {
+                console.log('clear call replied', reply);
+            })
         })
     })
     const msgSql = {
