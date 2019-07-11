@@ -50,7 +50,7 @@ const getMatchingResponse = (port, message) => {
 
 const returnCalls = (filters) => {
 	const path = filters.JSONPath;
-	return JSONPath( { path, json: engines[filters.port].calls, wrap: false});
+	return JSONPath( { path, json: engines[filters.port].calls});
 }
 
 const inspect = (msg) => {
