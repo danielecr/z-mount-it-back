@@ -11,6 +11,7 @@ const imposter = (engines) => (msg) => {
 				return 'ok';
 			});
         case '/calls_list':
+        case '/calls_clear':
             return mockInspector(msg)
         default:
             return Promise.resolve({error:'unknown request'})

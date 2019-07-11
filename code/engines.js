@@ -53,6 +53,14 @@ const returnCalls = (filters) => {
 	return JSONPath( { path, json: engines[filters.port].calls});
 }
 
+const clearCalls = (filters) => {
+	const path = filters.JSONPath;
+	const toClear = JSONPath( { path, json: engines[filters.port].calls}).map(o=>JSON.stringify(o));
+	engines[filters.port].calls = engines[filters.port].calls.filter(c=> toClear.indexOf(JSON.stringify(c)) === -1)
+	//console.log('CLEARD', engines[filters.port].calls, toClear);
+	return toClear.length
+}
+
 const inspect = (msg) => {
 	if(! msg.data.port) {
 		return Promise.resolve({error: 'missing port prop in data, for inspect command: ' + msg.cmd})
@@ -61,6 +69,9 @@ const inspect = (msg) => {
 		case '/calls_list':
 			const callList = returnCalls(msg.data);
 			return Promise.resolve({error:null, data: callList})
+		case '/calls_clear':
+			const cleared = clearCalls(msg.data);
+			return Promise.resolve({error:null, data: cleared})
 	}
 	return Promise.resolve({error: 'Unknown request' + msg.cmd})
 }
