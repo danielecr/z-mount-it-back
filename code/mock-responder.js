@@ -5,6 +5,12 @@ const mockResponder = (port) => (msg) => {
 	return Promise.resolve(response);
 }
 
+const mockInspector = (msg) => {
+	const response = engines.inspect(msg)
+	return Promise.resolve(response)
+}
+
 module.exports = {
-	mockResponder
+	mockResponder,
+	mockInspector
 }

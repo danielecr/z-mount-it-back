@@ -85,12 +85,14 @@ const sendToMock = () => {
         const askMsg = {
             cmd: '/get_calls',
             data: {
-                cmd: '/getMatchingProductByEAN'
+                port: 4441,
+                "JSONPath": "$.[?(@.cmd=='/getMatchingProductByEAN')]"
             }
         }
         imposter(askMsg).then(calls=>{
             console.log('calls', calls);
-            // calls[0] should be equals msg
+            assert.deepEqual(calls.data[0], msg);
+            // calls.data[0] should be equals msg
         })
     })
     const msgSql = {

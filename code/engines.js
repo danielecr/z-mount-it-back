@@ -6,18 +6,14 @@ const create = (def) => {
 	if ( engines[def.port]) {
 		return Promise.reject('already exists');
 	} else {
-		engines[def.port] = { definition: def, calls: {} }
+		engines[def.port] = { definition: def, calls: [] }
 		console.log('engines', engines);
 		return Promise.resolve(def.port);
 	}
 }
 
 const addCall = (port, message) => {
-	if (engines[port].calls[message.cmd]) {
-		engines[port].calls[message.cmd].push(message);
-	} else {
-		engines[port].calls[message.cmd] = [message];
-	}
+	engines[port].calls.push(message);
 }
 
 const matchingCmd = (requests, cmd) => {
@@ -93,8 +89,25 @@ const getMatchingResponse = (port, message) => {
 	return definition.unknown_request || {error: 'unknown'}
 }
 
+const returnCalls = (filters) => {
+	const path = filters.JSONPath;
+	return JSONPath( { path, json: engines[filters.port].calls, wrap: false});
+}
+
+const inspect = (msg) => {
+	if(! msg.data.port) {
+		return Promise.resolve({error: 'missing port prop in data, for inspect command: ' + msg.cmd})
+	}
+	switch (msg.cmd) {
+		case '/get_calls':
+			const callList = returnCalls(msg.data);
+			return Promise.resolve({error:null, data: callList})
+	}
+	return Promise.resolve({error: 'Unknown request' + msg.cmd})
+}
 
 module.exports = {
 	create,
-	getMatchingResponse
+	getMatchingResponse,
+	inspect
 }
