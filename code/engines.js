@@ -90,7 +90,7 @@ const getMatchingResponse = (port, message) => {
 	if(requestsData.length) {
 		return requestsData[0].msg_out
 	}
-
+	return definition.unknown_request || {error: 'unknown'}
 }
 
 

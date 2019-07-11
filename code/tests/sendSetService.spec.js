@@ -63,7 +63,10 @@ const setup = {
                     }
                 }
             }
-        ]
+        ],
+        unknown_request: {
+            error: 'unknown request'
+        }
     }
 }
 
@@ -89,6 +92,15 @@ const sendToMock = () => {
             console.log('calls', calls);
             // calls[0] should be equals msg
         })
+    })
+    const msgSql = {
+        cmd: '/sql',
+        data: {
+            sql: 'SELECT BLAH'
+        }
+    }
+    mockedService(msgSql).then( response => {
+        console.log('mocked service replied to sql', response)
     })
 }
 
