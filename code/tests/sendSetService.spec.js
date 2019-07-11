@@ -16,6 +16,17 @@ const msg_out = {
     }
 }
 
+const msg_out_sql = {
+    error: null,
+    data: {
+        rows: [{f:1,f2:2}]
+    }
+}
+
+const unknown_request = {
+    error: 'unknown request'
+}
+
 const setup = {
     cmd: "/add_rep_service",
     data: {
@@ -51,22 +62,15 @@ const setup = {
                             "JSONPath": "$.data.sql",
                             "tests": [
                                 { "type": "string" },
-                                { "RegExp": /^SELECT\s+\*\s+FROM tablex.*/}
+                                { "RegExp": /^SELECT\s+\*\s+FROM tablex.*$/i.toString()}
                             ]
                         }
                     ]
                 },
-                "msg_out": {
-                    error: null,
-                    data: {
-                        rows: [{f:1,f2:2}]
-                    }
-                }
+                msg_out: msg_out_sql
             }
         ],
-        unknown_request: {
-            error: 'unknown request'
-        }
+        unknown_request
     }
 }
 
@@ -103,6 +107,17 @@ const sendToMock = () => {
     }
     mockedService(msgSql).then( response => {
         console.log('mocked service replied to sql', response)
+        assert.deepEqual(response, unknown_request)
+    })
+    const msgSqlPass = {
+        cmd: '/sql',
+        data: {
+            sql: 'SELECT *    FRoM tablex WHERE Blah=23'
+        }
+    }
+    mockedService(msgSqlPass).then( response => {
+        console.log('mocked service replied to sql right', response)
+        assert.deepEqual(response, msg_out_sql)
     })
 }
 

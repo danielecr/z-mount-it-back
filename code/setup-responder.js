@@ -9,7 +9,6 @@ const setupResponder = (slave, port) => {
 		try {
 			const msg = messageToJson(request);
 			slave(msg).then(response=> {
-				console.log(response)
 				responder.send(objToMessage(response));
 			}).catch( err => {
 				const response = {error:err}
