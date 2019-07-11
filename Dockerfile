@@ -1,6 +1,6 @@
 FROM node:11-alpine
 
-RUN apk add --update file libunwind build-base python zeromq-dev tzdata \
+RUN apk add --no-cache file libunwind build-base python zeromq-dev tzdata \
     && rm -rf /var/cache/apk/* \
     && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
     && echo "Europe/Berlin" >  /etc/timezone
