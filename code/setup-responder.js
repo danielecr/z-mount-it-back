@@ -2,6 +2,8 @@ const zmq = require('zeromq-stable');
 
 const { messageToJson, objToMessage, makeErrorMessage } = require('./message_to_json');
 
+const responders = {};
+
 const setupResponder = (slave, port) => {
 	const responder = zmq.socket('rep');
 	responder.bind('tcp://*:'+port);
@@ -21,6 +23,15 @@ const setupResponder = (slave, port) => {
 			responder.send(objToMessage(response));
 		}
 	});
+	responders[port] = responder;
 }
 
-module.exports = setupResponder;
+const disposeResponder = (port) => {
+	responders[port].close();
+	delete responders[port];
+}
+
+module.exports = {
+	setupResponder,
+	disposeResponder
+};

@@ -1,4 +1,4 @@
-const setupResponder  = require('./setup-responder.js');
+const {setupResponder, disposeResponder}  = require('./setup-responder.js');
 
 const { mockResponder, mockInspector } = require('./mock-responder.js');
 
@@ -10,6 +10,11 @@ const imposter = (engines) => (msg) => {
 				setupResponder(mockResponder(msg.data.port), msg.data.port);
 				return 'ok';
 			});
+        case '/service_rep_del':
+            return engines.dispose(msg.data).then(_=>{
+                disposeResponder(msg.data.port)
+                return 'disposed';
+            })
         case '/calls_list':
         case '/calls_clear':
             return mockInspector(msg)

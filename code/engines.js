@@ -76,8 +76,14 @@ const inspect = (msg) => {
 	return Promise.resolve({error: 'Unknown request' + msg.cmd})
 }
 
+const dispose = (data) => {
+	delete engines[data.port];
+	return Promise.resolve(data)
+}
+
 module.exports = {
 	create,
 	getMatchingResponse,
-	inspect
+	inspect,
+	dispose
 }

@@ -89,6 +89,13 @@ const clear_calls = {
     }
 }
 
+const callMsg = {
+    cmd: '/calls_list',
+    data: {
+        port: 4441,
+        "JSONPath": "$.[?(@.cmd=='/getMatchingProductByEAN')]"
+    }
+}
 
 const sendToMock = () => {
     const msg = {
@@ -98,17 +105,33 @@ const sendToMock = () => {
             eans: [ 123, 3123, 41232, 41231]
         }
     }
-    mockedService(msg).then(response=>{
+
+    const msgSql = {
+        cmd: '/sql',
+        data: {
+            sql: 'SELECT BLAH'
+        }
+    }
+
+    const msgSqlPass = {
+        cmd: '/sql',
+        data: {
+            sql: 'SELECT *    FRoM tablex WHERE Blah=23'
+        }
+    }
+
+    return mockedService(msg).then(response=>{
         console.log('mockedservice replied', response);
         assert.deepEqual(response, msg_out)
-        const askMsg = {
-            cmd: '/calls_list',
-            data: {
-                port: 4441,
-                "JSONPath": "$.[?(@.cmd=='/getMatchingProductByEAN')]"
-            }
-        }
-        return imposter(askMsg);
+        return mockedService(msgSql)
+    }).then( response => {
+        console.log('mocked service replied to sql', response)
+        assert.deepEqual(response, unknown_request)
+        return mockedService(msgSqlPass);
+    }).then( response => {
+        console.log('mocked service replied to sql right', response)
+        assert.deepEqual(response, msg_out_sql)
+        return imposter(callMsg);
     }).then(calls=>{
         console.log('calls', calls);
         assert.deepEqual(calls.data[0], msg);
@@ -116,26 +139,8 @@ const sendToMock = () => {
         return imposter(clear_calls);
     }).then(reply=> {
         console.log('clear call replied', reply);
-    })
-    const msgSql = {
-        cmd: '/sql',
-        data: {
-            sql: 'SELECT BLAH'
-        }
-    }
-    mockedService(msgSql).then( response => {
-        console.log('mocked service replied to sql', response)
-        assert.deepEqual(response, unknown_request)
-    })
-    const msgSqlPass = {
-        cmd: '/sql',
-        data: {
-            sql: 'SELECT *    FRoM tablex WHERE Blah=23'
-        }
-    }
-    mockedService(msgSqlPass).then( response => {
-        console.log('mocked service replied to sql right', response)
-        assert.deepEqual(response, msg_out_sql)
+        assert.equal(reply.data, 1)
+        return 'ok'
     })
 }
 
@@ -144,5 +149,10 @@ const sendToMock = () => {
 
 imposter(setup).then(response=> {
     console.log('Imposter Setted: ',response)
-    sendToMock();
+    return sendToMock()
+}).then(ok=> {
+    console.log('ok is',ok)
+    return imposter(remove_rep)
+}).then(response=> {
+    console.log('remove_rep', response)
 })
