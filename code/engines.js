@@ -20,8 +20,8 @@ const addCall = (port, message) => {
 	}
 }
 
-const matchingCmd = (definition, cmd) => {
-	return definition.requests.filter(def=>def.msg_in.cmd==cmd);
+const matchingCmd = (requests, cmd) => {
+	return requests.filter(def=>def.msg_in.cmd==cmd);
 }
 
 const dataPassTests = (data, tests, test_mode = 'all') => {
@@ -67,8 +67,8 @@ const dataPassTests = (data, tests, test_mode = 'all') => {
 	}
 }
 
-const matchingData = (definition, data) => {
-	return definition.requests.filter(def => {
+const matchingData = (requests, data) => {
+	return requests.filter(def => {
 		const cnt_dmatches = def.msg_in.data_matches.reduce( (acc, datamatch) => {
 			const matches = JSONPath( { path: datamatch.JSONPath, json: {data}, wrap: false });
 			console.log('jpathmatches', matches, datamatch.JSONPath, {data});
@@ -83,10 +83,14 @@ const getMatchingResponse = (port, message) => {
 	console.log(port, message)
 	const definition = engines[port].definition;
 	addCall(port, message);
-	const requestsCmd = matchingCmd(definition, message.cmd);
-	const requestsData = matchingData(definition, message.data);
+	const requestsCmd = matchingCmd(definition.requests, message.cmd);
+	console.log('request cmd', requestsCmd)
+	const requestsData = matchingData(requestsCmd, message.data);
 	console.log('matched reqs', requestsData)
-	return requestsData[0].msg_out
+	if(requestsData.length) {
+		return requestsData[0].msg_out
+	}
+
 }
 
 
