@@ -48,6 +48,17 @@ to run additional shell
 
 the created container mount code/ as volume, usefull for developing
 
+use .git/hooks/post-commit
+
+~~~
+#!/bin/sh
+
+COMMIT_VER="v"`cat code/package.json | awk '/version/ { print $2 }' | tr -d ",\""`
+if [ `git describe --tags` != "$COMMIT_VER" ]; then
+    git tag $COMMIT_VER
+fi
+~~~
+
 
 ### TODO
 
