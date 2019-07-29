@@ -5,22 +5,22 @@ const { messageToJson, objToMessage, makeErrorMessage } = require('./message_to_
 const responders = {};
 
 const setupResponder = (slave, port) => {
-	const responder = zmq.socket('rep');
-	responder.bind('tcp://*:'+port);
-	responder.on('message', (request) => {
+	const responder = zmq.socket('router');
+	responder.bindSync('tcp://*:'+port);
+	responder.on('message', (identity, delimiter, request) => {
 		try {
 			const msg = messageToJson(request);
 			slave(msg).then(response=> {
-				responder.send(objToMessage(response));
+				responder.send([identity, '', objToMessage(response)]);
 			}).catch( err => {
 				const response = {error:err}
 				console.log(response)
-				responder.send(objToMessage(response));
+				responder.send([identity, '', objToMessage(response)]);
 			})
 		} catch(err) {
 			const response = {error:err}
 			console.log('last catch', response)
-			responder.send(objToMessage(response));
+			responder.send([identity, '', objToMessage(response)]);
 		}
 	});
 	responders[port] = responder;
